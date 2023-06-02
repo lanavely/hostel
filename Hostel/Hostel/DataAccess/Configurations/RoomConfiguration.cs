@@ -1,0 +1,26 @@
+﻿using Hostel.DataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Hostel.DataAccess.Configurations
+{
+    public class RoomConfiguration : IEntityTypeConfiguration<RoomEntity>
+    {
+        public void Configure(EntityTypeBuilder<RoomEntity> builder)
+        {
+            builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.Name).HasMaxLength(100);
+            builder.Property(x => x.Square).HasMaxLength(15);
+            builder.Property(x => x.Comment).HasMaxLength(1000);
+            builder.Property(x => x.Description).HasMaxLength(1000);
+
+            builder.HasMany(x => x.Bookings)
+                .WithOne(x => x.Room)
+                .HasPrincipalKey(x => x.Id)
+                .HasForeignKey(x => x.RoomId)
+                .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired();
+        }
+    }
+}
